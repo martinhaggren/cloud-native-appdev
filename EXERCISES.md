@@ -456,6 +456,61 @@ To test the pipeline, make a change to a source file in any of the services, the
 
 You can also follow the progress in the AWS Console, go to **CodePipeline**.
 
+## Scheduled job for reporting (optional)
+
+In this additional exercise we will implement a scheduled [Job](https://aws.github.io/copilot-cli/docs/concepts/jobs/) that will list content request inserted into the DynamoDB Table.
+
+For now, we will set up the job to run every 5 minutes and only list the most 5 most recent content request but in a 'real scenario' this could be for example a daily report, listing all content request created 'yesterday'.
+
+
+* Go to the folder `jobs/reporter`, have a look at the file `src/reporter.js`. When executed, it will connect to the DynamoDB Table and fetch the 5 most recent content requests.
+
+    _Adapt the script according to if you have the ts attribute stored in your content requests or not_
+
+
+### Test locally using Docker
+
+* From the `jobs/reporter` folder, issue the command below to create a Docker image
+
+         docker build -t reporter:v1 .
+
+
+* Next, run a container
+ 
+        docker run -e CONTENT_NAME_DDB_TABLE_NAME=LOCAL_DDB reporter:v1
+
+### Deployment
+* Initialize the job
+
+        copilot job init
+
+* When asked questions about the job, answer as below:
+ 
+      Job name: reporter
+      Dockerfile: Enter custom path for your Dockerfile
+      Dockerfile: jobs/reporter/Dockerfile
+      Schedule type: Fixed Schedule
+      Fixed schedule: Custom     --> type:    @every 5m 
+
+
+* Copy the `addons`-folder from `copilot/content` to `copilot/reporter`
+  This is to ensure that the job can access the DynamoDB table
+
+
+* Deploy the job
+
+      copilot job deploy  
+
+
+* Examine the logs for the job, within 5 minutes a report will be logged.
+
+      copilot job logs --follow
+
+* After a few runs, when verified that everything works, delete the job again.
+
+      copilot job delete --name reporter
+
+
 ## Cleanup
 When finished with the exercise, remove the application and all deployed resources by running the following in the **project root**:
 
