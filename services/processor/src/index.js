@@ -73,6 +73,7 @@ const processor = async () => {
       const body      = JSON.parse(Body);
       const requestId = body.Message;
 
+      await delay(1 * 1000);
       console.log(`Request with ID: ${requestId} processed successfully.`);
 
       // TODO Exercise 4-4: For each message, send DeleteMessageCommand to instruct the queue the the message has been handled and can be removed.
