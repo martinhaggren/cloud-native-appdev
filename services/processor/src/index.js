@@ -18,6 +18,7 @@ const delay = delayMs => {
   });
 };
 
+console.log('asdasds');
 
 let running = true;
 
