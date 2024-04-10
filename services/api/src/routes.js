@@ -13,6 +13,8 @@ const sns = new SNSClient({
 
 const env = require('./env');
 
+console.log('test');
+
 // TODO Exercise 1: Implement healthcheck path GET /healthz
 // ...
 //routes.get('/healthz', (_, res) => {
